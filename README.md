@@ -6,7 +6,7 @@ Docker build system for mark7 e-reader firmware.
 
 1. Find how to add new fonts
 2. Figure out how to add browser to main menu
-3. Add crontab based HTTPS sync
+3. Add crontab based Git or HTTPS sync
 
 ## Notes
 
