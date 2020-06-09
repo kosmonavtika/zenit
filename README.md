@@ -16,3 +16,4 @@ Docker build system for mark7 e-reader firmware.
 4. [SSH access](https://yingtongli.me/blog/2018/07/30/kobo-ssh.html)
 5. [Dictionaries #1](https://github.com/BoboTiG/ebook-reader-dict)
 6. [Dictionaries #2](#)
+7. [Menu](https://github.com/baskerville/plato/tree/master/contrib/NickelMenu)
