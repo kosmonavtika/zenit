@@ -1,12 +1,20 @@
-# mark7-firmware-build
+# Kosmos Reader
 
-Docker build system for mark7 e-reader firmware.
+Minimal firmware overlay for Kobo e-readers.
 
-## Checklist
+## To do
 
-1. Find how to add new fonts
-2. Figure out how to add browser to main menu
-3. Add crontab based Git or HTTPS sync
+* Harden firmware
+    * Force use of keys for SSH access
+    * Delete users
+    * Password protect root user
+    * Remove serial console access
+* Add SSH on/off switch to menu
+* Add browser to main menu
+* Add HTTP(S) and/or ODPS based book synchronization
+* Make activation less intrusive (don't use `/etc/init.d/rcS`)
+* Add additional dictionaries
+* Add article synchronization
 
 ## Notes
 
