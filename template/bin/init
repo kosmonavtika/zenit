@@ -14,8 +14,7 @@ echo "platform    $(/bin/sh /bin/guess)" >> $KOSMOS_INIT_LOG
 echo "" >> $KOSMOS_INIT_LOG
 
 # write filesystem table to log
-ls -latrR / > $KOSMOS_FILESYSTEM_LOG
+#ls -latrR / > $KOSMOS_FILESYSTEM_LOG
 
 # start ssh server
 $KOSMOS_ROOT/bin/dropbearmulti dropbear -B -F -E -r $KOSMOS_ROOT/etc/ssh/dss_key -r $KOSMOS_ROOT/etc/ssh/rsa_key -r $KOSMOS_ROOT/etc/ssh/ecdsa_key &
-
