@@ -92,6 +92,7 @@ RUN tar xfvz /tmp/output/firmware/KoboRoot.tgz >> /tmp/log && \
 COPY --from=dropbear-build /tmp/dropbear-build/dropbear-arm/dropbearmulti /tmp/output/root/bin/
 COPY --from=dropbear-build /tmp/dropbear-build/dropbear-x86/*_key /tmp/output/root/etc/ssh/
 COPY --from=dict-build /tmp/dict-build/ebook-reader-dict/data/sv/dicthtml-*.zip /tmp/output/vendor/dict/
+RUN chmod a+x /tmp/output/root/bin/*
 
 # copy logs to container
 COPY --from=dropbear-build /tmp/log /tmp/logs/dropbear-build.log
