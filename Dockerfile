@@ -18,7 +18,7 @@ RUN apt-get update >> /tmp/log && \
 
 # download dropbear sources
 RUN wget -O dropbear.tar.bz2 https://matt.ucc.asn.au/dropbear/releases/dropbear-2019.78.tar.bz2 >> /tmp/log && \
-    tar xf /tmp/dropbear-build/dropbear.tar.bz2 -C /tmp/dropbear-build/dropbear-arm --strip-components=1 >> /tmp/log  && \
+    tar xf /tmp/dropbear-build/dropbear.tar.bz2 -C /tmp/dropbear-build/dropbear-arm --strip-components=1 >> /tmp/log && \
     tar xf /tmp/dropbear-build/dropbear.tar.bz2 -C /tmp/dropbear-build/dropbear-x86 --strip-components=1 >> /tmp/log
 
 # build dropbear for armv7l
@@ -73,6 +73,7 @@ RUN mkdir -pv /tmp/output/root/var/log \
     /tmp/output/root/bin \
     /tmp/output/vendor/dict \
     /tmp/output/firmware/root \
+    /tmp/artifacts \
     /tmp/logs >> /tmp/log
 
 # download firmware
@@ -114,4 +115,5 @@ RUN export KOSMOS_BUILD_LOG="/tmp/output/root/var/log/build-$(date '+%F').log" &
     echo "" >> $KOSMOS_BUILD_LOG && \
     gzip $KOSMOS_BUILD_LOG
 
-CMD [ "cp", "-vrf", "/tmp/output/*", "/tmp/artifacts/" ]
+# extract artifacts
+CMD cp -vrf /tmp/output/root /tmp/artifacts/root && cp -vrf /tmp/output/vendor /tmp/artifacts/vendor
