@@ -1,6 +1,6 @@
 # Kosmos Reader
 
-Minimal firmware overlay for Kobo e-readers.
+Minimal firmware overlay for Kobo Mk7 eBook readers.
 
 ## To do
 
@@ -11,8 +11,9 @@ Minimal firmware overlay for Kobo e-readers.
     * Remove serial console access
 * Add SSH on/off switch to menu
 * Add browser to main menu
-* Add HTTP(S) and/or ODPS based book synchronization
+* Add `HTTP(S)` and/or `ODPS` based book synchronization
 * Make activation less intrusive (don't use `/etc/init.d/rcS`)
+    * Use `udev/rules.d`?
 * Add additional dictionaries
 * Add article synchronization
 
