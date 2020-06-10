@@ -4,6 +4,15 @@ Minimal firmware overlay for Kobo Mk7 eBook readers.
 
 **DISCLAIMER: Use at your own risk! This can potentially brick your device.**
 
+## How it works
+
+1. Docker builds [Dropbear](https://github.com/mkj/dropbear)
+2. Docker builds [dictionaries](https://github.com/BoboTiG/ebook-reader-dict)
+3. Docker downloads and modifies official firmware
+4. Docker combines built, downloaded and modified files (in `artifacts`) with Kosmos Reader template filesystem (in `template`)
+
+After building, you can flash your device using `flash.sh <device mountpoint> <ssh key>`.
+
 ## To do
 
 * Harden firmware
