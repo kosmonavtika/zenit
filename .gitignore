@@ -1,3 +1,4 @@
 artifacts/*
 !artifacts/.keep
 temp/
+.DS_Store
