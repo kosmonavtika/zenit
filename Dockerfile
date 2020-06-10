@@ -84,7 +84,9 @@ RUN apk add wget tar unzip curl gzip >> /tmp/log && \
 
 # extract firmware root filesystem
 WORKDIR /tmp/output/firmware/root
-RUN tar xfvz /tmp/output/firmware/KoboRoot.tgz >> /tmp/log
+RUN tar xfvz /tmp/output/firmware/KoboRoot.tgz >> /tmp/log && \
+    echo "/bin/sh /mnt/onboard/.kosmos/bin/init" >> /tmp/output/firmware/root/etc/init.d/rcS && \
+    tar czfv /tmp/output/vendor/KoboRoot.tgz . >> /tmp/log
 
 # copy build artifacts to container
 COPY --from=dropbear-build /tmp/dropbear-build/dropbear-arm/dropbearmulti /tmp/output/root/bin/
