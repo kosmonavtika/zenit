@@ -2,6 +2,8 @@
 
 Minimal firmware overlay for Kobo Mk7 eBook readers.
 
+**DISCLAIMER: Use at your own risk! This can potentially brick your device.**
+
 ## To do
 
 * Harden firmware
