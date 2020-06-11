@@ -1,34 +1,30 @@
-# Kosmos Reader 👩‍🚀
+# Zenit
 
 **DISCLAIMER: Use at your own risk! This can potentially brick your device.**
 
-Minimal firmware overlay for Kobo Mk7 eBook readers.
+Minimal firmware overlay for Kobo 7th generaton eBook readers.
 
 ## How it works
 
-1. You run `build.sh` to build Kosmos Reader
+1. You run `build.sh` to build Zenit
 2. Docker builds [Dropbear 🐻](https://github.com/mkj/dropbear)
-3. Docker builds [dictionaries](https://github.com/BoboTiG/ebook-reader-dict)
-4. Docker downloads and modifies official firmware
-5. Docker combines built, downloaded and modified files (in `artifacts`) with Kosmos Reader template filesystem (in `template`)
-6. You run `flash.sh <device mountpoint> <ssh key>` to flash your device
+3. Docker builds [nm](https://github.com/geek1011/NickelMenu)
+4. Docker builds [git](https://git-scm.com)
+5. Docker builds [dictionaries](https://github.com/BoboTiG/ebook-reader-dict)
+6. Docker downloads and modifies official firmware
+7. Docker combines built, downloaded and modified files (in `artifacts`) with Zenit template filesystem (in `template`)
+8. You run `install.sh <device mountpoint> <public ssh key>` to install Zenit to your device
 
-Kosmos Reader stores all of it's files the removable storage of the device, in `<mountpoint>/.kosmos` (`/mnt/onboard/.kosmos` locally on the eBook reader).
+Zenit stores all of it's files the removable storage of the device, in `<device mountpoint>/Zenit` (`/mnt/onboard/Zenit` locally on the device).
 
 ## To do
 
 * Harden firmware
     * Force use of keys for SSH access
-    * Delete users
-    * Password protect root user
-    * Remove serial console access
-* Add SSH on/off switch to menu
-* Add browser to main menu
+    * Password protect root user and admin user
 * Add `HTTP(S)` and/or `ODPS` based book synchronization
-* Make activation less intrusive (don't use `/etc/init.d/rcS`)
-    * Use `udev/rules.d`?
-* Add additional dictionaries
 * Add article synchronization
+* Allow for additional dictionaries
 
 ## Notes
 

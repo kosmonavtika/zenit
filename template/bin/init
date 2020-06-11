@@ -1,24 +1,32 @@
 #!/bin/sh
 
 # initial setup
-export KOSMOS_ROOT=/mnt/onboard/.kosmos
-export KOSMOS_VENDOR=/mnt/onboard/.kobo
-ln -s $KOSMOS_ROOT /kosmos
+export ZENIT_ROOT=/mnt/onboard/Zenit
+export ZENIT_VENDOR=/mnt/onboard/.kobo
+export PATH="$PATH:$ZENIT_ROOT/bin"
 
-export PATH="$KOSMOS_ROOT/bin:$PATH"
+# reset /tmp
+rm -rf $ZENIT_ROOT/tmp
+mkdir -p $ZENIT_ROOT/tmp
 
-KOSMOS_INIT_LOG=$KOSMOS_ROOT/var/log/init-$(date '+%F').log
+# attach ssh key(s)
+ln -s $ZENIT_ROOT/etc/ssh/authorized_keys /root/.ssh/authorized_keys
+ln -s $ZENIT_ROOT /Zenit
+touch /var/log/lastlog
+#chmod a-x /usr/bin/telnet
 
-# write device information to log
-echo "+-------------------------------------------------------------+" >> $KOSMOS_INIT_LOG
-echo " kosmos reader init $(date)" >> $KOSMOS_INIT_LOG
-echo "+-------------------------------------------------------------+" >> $KOSMOS_INIT_LOG
-echo " kernel - $(uname -a)" >> $KOSMOS_INIT_LOG
-echo " os     - $(cat /proc/sys/kernel/osrelease)" >> $KOSMOS_INIT_LOG
-echo " root   - $(echo $KOSMOS_ROOT)" >> $KOSMOS_INIT_LOG
-echo "" >> $KOSMOS_INIT_LOG
+ZENIT_INIT_LOG="$ZENIT_ROOT/var/log/init-$(date '+%F').log"
 
-# ssh (comment to disable)
-$KOSMOS_ROOT/bin/dropbearmulti dropbear -B -F -E -r $KOSMOS_ROOT/etc/ssh/dss_key -r $KOSMOS_ROOT/etc/ssh/rsa_key -r $KOSMOS_ROOT/etc/ssh/ecdsa_key &; echo "ssh server enabled" >> $KOSMOS_INIT_LOG
+echo "+-------------------------------------------------------------+" >> $ZENIT_INIT_LOG
+echo " zenit init log $(date)" >> $ZENIT_INIT_LOG
+echo "+-------------------------------------------------------------+" >> $ZENIT_INIT_LOG
+echo " kernel - $(uname -a)" >> $ZENIT_INIT_LOG
+echo " os     - $(cat /proc/sys/kernel/osrelease)" >> $ZENIT_INIT_LOG
+echo " root   - $(echo $ZENIT_ROOT)" >> $ZENIT_INIT_LOG
+echo "" >> $ZENIT_INIT_LOG
 
-echo "" >> $KOSMOS_INIT_LOG
+echo "running init scripts.."
+run-parts --verbose $ZENIT_ROOT/etc/init.d >> $ZENIT_INIT_LOG
+
+echo "init done!" >> $ZENIT_INIT_LOG
+echo "" >> $ZENIT_INIT_LOG

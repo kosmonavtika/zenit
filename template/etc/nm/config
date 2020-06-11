@@ -1,3 +1,9 @@
-menu_item :main :Web Explorer :nickel_extras :web_browser
-menu_item :main :Sketch	      :nickel_extras :sketch_pad
-#menu_item :main :Dropbox      :nickel_open   :library:dropbox
+menu_item   :main   :Internet      :nickel_extras  :web_browser
+menu_item   :main   :Sketch         :nickel_extras  :sketch_pad
+menu_item   :main   :SSH            :cmd_output     :500:quiet      :/usr/bin/pkill -f "^/mnt/onboard/Zenit/bin/dropbearmulti dropbear"
+  chain_success:skip:4
+  chain_failure                     :cmd_spawn      :quiet          :exec /mnt/onboard/Zenit/bin/dropbearmulti dropbear -p 22 -E -d /mnt/onboard/Zenit/etc/ssh/dss_key -r /mnt/onboard/Zenit/etc/ssh/rsa_key -r /mnt/onboard/Zenit/etc/ssh/ecdsa_key
+    chain_success                   :dbg_toast      :Secure Shell started
+    chain_failure                   :dbg_toast      :Unable to start Secure Shell
+    chain_always:skip:-1
+  chain_success                     :dbg_toast      :Secure Shell stopped

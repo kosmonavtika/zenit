@@ -3,10 +3,10 @@
 SECONDS=0
 
 rm -rfv $PWD/artifacts/{root,vendor}
-docker build . -t kosmos-reader && \
-docker run --rm -v "$PWD/artifacts:/tmp/artifacts" kosmos-reader:latest && \
+docker build . -t zenit-build && \
+docker run --rm -v "$PWD/artifacts:/tmp/artifacts" zenit-build:latest && \
 duration=$SECONDS && \
 echo && \
-echo "kosmos reader built in ${duration}s" && \
-echo "use ./flash.sh <target mountpoint> <ssh key> to flash device" || \
+echo "zenit built in ${duration}s" && \
+echo "use install.sh <device mountpoint> <public ssh key> to install to device" || \
 echo "ERROR: build failed"
