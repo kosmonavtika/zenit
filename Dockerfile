@@ -37,6 +37,7 @@ RUN ./dropbearmulti dropbearkey -t dss -f dss_key >> /tmp/log && \
     ./dropbearmulti dropbearkey -t rsa -f rsa_key >> /tmp/log && \
     ./dropbearmulti dropbearkey -t ecdsa -f ecdsa_key >> /tmp/log
 
+
 #
 # build dictionaries
 #
@@ -56,16 +57,43 @@ RUN apk add alpine-sdk git >> /tmp/log && \
 WORKDIR /tmp/dict-build/ebook-reader-dict
 RUN python -m scripts --locale sv >> /tmp/log
 
+
+#
+# build nickelmenu
+#
+
+FROM geek1011/nickeltc:1.0 as nm-build
+
+# setup directories and install dependencies
+RUN mkdir -p /tmp/nm-build >> /tmp/log && \
+    apt-get update >> /tmp/log && \
+    apt-get install -y git >> /tmp/log
+
+# clone nm git repository and patch nm config directory
+WORKDIR /tmp/nm-build
+RUN git clone https://github.com/geek1011/NickelMenu.git >> /tmp/log && \
+    sed -i 's/NM_CONFIG_DIR \"\/mnt\/onboard\/.adds\/nm\"/NM_CONFIG_DIR \"\/mnt\/onboard\/.kosmos\/etc\/nm\"/g' /tmp/nm-build/NickelMenu/src/config.h >> /tmp/log && \
+    cat /tmp/nm-build/NickelMenu/src/config.h
+
+# build nm
+WORKDIR /tmp/nm-build/NickelMenu
+RUN make clean >> /tmp/log && \
+    make all koboroot NM_CONFIG_DIR="/mnt/onboard/.kosmos/etc/nm" >> /tmp/log && \
+    mkdir out && mv KoboRoot.tgz src/libnm.so out/
+
+# extract compiled tgz
+WORKDIR /tmp/nm-build/NickelMenu/out
+RUN tar xfv KoboRoot.tgz >> /tmp/log
+
+
 #
 # build firmware package
-#
-
-FROM alpine:latest
-
 #
 # TODO: replace urls with data retrieved from https://pgaskin.net/KoboStuff/kobofirmware.html
 # TODO: add ignore to /mnt/onboard/.kosmos
 #
+
+FROM alpine:latest
 
 # setup directories
 RUN mkdir -pv /tmp/output/root/var/log \
@@ -76,15 +104,16 @@ RUN mkdir -pv /tmp/output/root/var/log \
     /tmp/artifacts \
     /tmp/logs >> /tmp/log
 
-# download firmware
+# download firmware and menu customization
 WORKDIR /tmp/output/firmware
 RUN apk add wget tar unzip curl gzip >> /tmp/log && \
-    wget -O /tmp/output/firmware/archive.zip "https://kbdownload1-a.akamaihd.net/firmwares/kobo7/May2020/kobo-update-4.21.15015.zip" >> /tmp/log && \
-    unzip /tmp/output/firmware/archive.zip >> /tmp/log && \
-    rm -fv /tmp/output/firmware/archive.zip >> /tmp/log 
+    wget -O /tmp/output/firmware/firmware.zip "https://kbdownload1-a.akamaihd.net/firmwares/kobo7/May2020/kobo-update-4.21.15015.zip" >> /tmp/log && \
+    unzip /tmp/output/firmware/firmware.zip >> /tmp/log && \
+    rm -fv /tmp/output/firmware/firmware.zip >> /tmp/log 
 
 # extract firmware root filesystem
 WORKDIR /tmp/output/firmware/root
+COPY --from=nm-build /tmp/nm-build/NickelMenu/out/usr /tmp/output/firmware/root/usr
 RUN tar xfvz /tmp/output/firmware/KoboRoot.tgz >> /tmp/log && \
     echo "/bin/sh /mnt/onboard/.kosmos/bin/init" >> /tmp/output/firmware/root/etc/init.d/rcS && \
     tar czfv /tmp/output/vendor/KoboRoot.tgz . >> /tmp/log
@@ -98,6 +127,7 @@ RUN chmod a+x /tmp/output/root/bin/*
 # copy logs to container
 COPY --from=dropbear-build /tmp/log /tmp/logs/dropbear-build.log
 COPY --from=dict-build /tmp/log /tmp/logs/dict-build.log
+COPY --from=nm-build /tmp/log /tmp/logs/nm-build.log
 
 # concatenate log
 RUN export KOSMOS_BUILD_LOG="/tmp/output/root/var/log/build-$(date '+%F').log" && \
@@ -109,6 +139,9 @@ RUN export KOSMOS_BUILD_LOG="/tmp/output/root/var/log/build-$(date '+%F').log" &
     echo "" >> $KOSMOS_BUILD_LOG && \
     echo "dictionary build:" >> $KOSMOS_BUILD_LOG && \
     cat /tmp/logs/dict-build.log >> $KOSMOS_BUILD_LOG && \
+    echo "" >> $KOSMOS_BUILD_LOG && \
+    echo "nm build:" >> $KOSMOS_BUILD_LOG && \
+    cat /tmp/logs/nm-build.log >> $KOSMOS_BUILD_LOG && \
     echo "" >> $KOSMOS_BUILD_LOG && \
     echo "firmware build:" >> $KOSMOS_BUILD_LOG && \
     cat /tmp/log >> $KOSMOS_BUILD_LOG && \
