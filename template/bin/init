@@ -1,20 +1,28 @@
 #!/bin/sh
 
+# initial setup
 export KOSMOS_ROOT=/mnt/onboard/.kosmos
+export KOSMOS_VENDOR=/mnt/onboard/.kobo
+ln -s $KOSMOS_ROOT /kosmos
+
+export PATH="$KOSMOS_ROOT/bin:$PATH"
+
 KOSMOS_INIT_LOG=$KOSMOS_ROOT/var/log/init-$(date '+%F').log
-KOSMOS_FILESYSTEM_LOG=$KOSMOS_ROOT/var/log/filesystem.log
 
 # write device information to log
-echo "---------------------------------------------------------------" >> $KOSMOS_INIT_LOG
-echo "kosmos reader init $(date)" >> $KOSMOS_INIT_LOG
-echo "---------------------------------------------------------------" >> $KOSMOS_INIT_LOG
-echo "kernel      $(uname -a)" >> $KOSMOS_INIT_LOG
-echo "os release  $(cat /proc/sys/kernel/osrelease)" >> $KOSMOS_INIT_LOG
-echo "platform    $(/bin/sh /bin/guess)" >> $KOSMOS_INIT_LOG
+echo "+-------------------------------------------------------------+" >> $KOSMOS_INIT_LOG
+echo " kosmos reader init $(date)" >> $KOSMOS_INIT_LOG
+echo "+-------------------------------------------------------------+" >> $KOSMOS_INIT_LOG
+echo " kernel - $(uname -a)" >> $KOSMOS_INIT_LOG
+echo " os     - $(cat /proc/sys/kernel/osrelease)" >> $KOSMOS_INIT_LOG
+echo " root   - $(echo $KOSMOS_ROOT)" >> $KOSMOS_INIT_LOG
 echo "" >> $KOSMOS_INIT_LOG
+
+# ssh (comment to disable)
+$KOSMOS_ROOT/bin/dropbearmulti dropbear -B -F -E -r $KOSMOS_ROOT/etc/ssh/dss_key -r $KOSMOS_ROOT/etc/ssh/rsa_key -r $KOSMOS_ROOT/etc/ssh/ecdsa_key &; echo "ssh server enabled" >> $KOSMOS_INIT_LOG
 
 # write filesystem table to log
 #ls -latrR / > $KOSMOS_FILESYSTEM_LOG
 
-# start ssh server
-$KOSMOS_ROOT/bin/dropbearmulti dropbear -B -F -E -r $KOSMOS_ROOT/etc/ssh/dss_key -r $KOSMOS_ROOT/etc/ssh/rsa_key -r $KOSMOS_ROOT/etc/ssh/ecdsa_key &
+
+echo "" >> $KOSMOS_INIT_LOG
