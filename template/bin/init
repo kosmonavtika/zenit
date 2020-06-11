@@ -21,8 +21,4 @@ echo "" >> $KOSMOS_INIT_LOG
 # ssh (comment to disable)
 $KOSMOS_ROOT/bin/dropbearmulti dropbear -B -F -E -r $KOSMOS_ROOT/etc/ssh/dss_key -r $KOSMOS_ROOT/etc/ssh/rsa_key -r $KOSMOS_ROOT/etc/ssh/ecdsa_key &; echo "ssh server enabled" >> $KOSMOS_INIT_LOG
 
-# write filesystem table to log
-#ls -latrR / > $KOSMOS_FILESYSTEM_LOG
-
-
 echo "" >> $KOSMOS_INIT_LOG
