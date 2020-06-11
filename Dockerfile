@@ -180,19 +180,15 @@ RUN export ZENIT_BUILD_LOG="/tmp/output/root/var/log/build-$(date '+%F').log" &&
     echo "dropbear build:" >> $ZENIT_BUILD_LOG && \
     cat /tmp/logs/dropbear-build.log >> $ZENIT_BUILD_LOG && \
     echo "" >> $ZENIT_BUILD_LOG && \
-
     echo "nm build:" >> $ZENIT_BUILD_LOG && \
     cat /tmp/logs/nm-build.log >> $ZENIT_BUILD_LOG && \
     echo "" >> $ZENIT_BUILD_LOG && \
-
     echo "git build:" >> $ZENIT_BUILD_LOG && \
     cat /tmp/logs/git-build.log >> $ZENIT_BUILD_LOG && \
     echo "" >> $ZENIT_BUILD_LOG && \
-
     echo "dictionary build:" >> $ZENIT_BUILD_LOG && \
     cat /tmp/logs/dict-build.log >> $ZENIT_BUILD_LOG && \
     echo "" >> $ZENIT_BUILD_LOG && \
-
     echo "firmware build:" >> $ZENIT_BUILD_LOG && \
     cat /tmp/log >> $ZENIT_BUILD_LOG && \
     echo "" >> $ZENIT_BUILD_LOG && \
