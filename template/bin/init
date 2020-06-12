@@ -1,5 +1,7 @@
 #!/bin/sh
 
+SECONDS=0
+
 # initial setup
 export ZENIT_ROOT=/mnt/onboard/Zenit
 export ZENIT_VENDOR=/mnt/onboard/.kobo
@@ -20,13 +22,14 @@ ZENIT_INIT_LOG="$ZENIT_ROOT/var/log/init-$(date '+%F').log"
 echo "+-------------------------------------------------------------+" >> $ZENIT_INIT_LOG
 echo " zenit init log $(date)" >> $ZENIT_INIT_LOG
 echo "+-------------------------------------------------------------+" >> $ZENIT_INIT_LOG
-echo " kernel - $(uname -a)" >> $ZENIT_INIT_LOG
-echo " os     - $(cat /proc/sys/kernel/osrelease)" >> $ZENIT_INIT_LOG
-echo " root   - $(echo $ZENIT_ROOT)" >> $ZENIT_INIT_LOG
-echo "" >> $ZENIT_INIT_LOG
+echo " kernel  $(uname -a)" >> $ZENIT_INIT_LOG
+echo " os      $(cat /proc/sys/kernel/osrelease)" >> $ZENIT_INIT_LOG
+echo " root    $(echo $ZENIT_ROOT)" >> $ZENIT_INIT_LOG
+echo "+-------------------------------------------------------------+" >> $ZENIT_INIT_LOG
 
-echo "running init scripts.."
+echo "running init scripts" >> $ZENIT_INIT_LOG
 run-parts --verbose $ZENIT_ROOT/etc/init.d >> $ZENIT_INIT_LOG
 
-echo "init done!" >> $ZENIT_INIT_LOG
+duration=$SECONDS
+echo "init done in ${duration}s!" >> $ZENIT_INIT_LOG
 echo "" >> $ZENIT_INIT_LOG
